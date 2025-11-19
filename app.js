@@ -10,11 +10,9 @@ if (!process.env.JWT_SECRET) {
 
 // Validate JWT_LIFETIME and set default if not provided
 if (!process.env.JWT_LIFETIME || process.env.JWT_LIFETIME.trim() === "") {
-  console.log("JWT_LIFETIME not set, using default: 30d");
   process.env.JWT_LIFETIME = "30d";
 }
 
-console.log("JWT_LIFETIME:", process.env.JWT_LIFETIME);
 
 // extra security packages
 const helmet = require("helmet");
@@ -118,7 +116,7 @@ const start = async () => {
   try {
     await connectDB(process.env.MONGO_URI);
     app.listen(port, () =>
-      console.log(`✅ Server is listening on port ${port}...`)
+      console.log(`Server is listening on port ${port}...`)
     );
   } catch (error) {
     console.log(error);

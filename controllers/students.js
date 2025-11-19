@@ -8,8 +8,6 @@ const createStudent = async (req, res) => {
     const bodyString = JSON.stringify(req.body);
     const convertedBody = qs.parse(JSON.parse(bodyString));
 
-    console.log("✅ Converted Body (Create):", convertedBody);
-
     const studentData = {
       studentId: convertedBody.studentId,
       fullName: convertedBody.fullName,
@@ -29,9 +27,7 @@ const createStudent = async (req, res) => {
       },
       courses: {
         selectedCourse: convertedBody.courses?.selectedCourse,
-        batch: convertedBody.courses?.batch,
         totalFees: convertedBody.courses?.totalFees,
-        downPayment: convertedBody.courses?.downPayment,
         numberOfInstallments: convertedBody.courses?.numberOfInstallments,
         feePerInstallment: convertedBody.courses?.feePerInstallment,
         amountPaid: convertedBody.courses?.amountPaid,
@@ -99,104 +95,6 @@ const getStudentById = async (req, res) => {
   }
 };
 
-// ✅ Update Student
-// const updateStudent = async (req, res) => {
-//   try {
-//     // const bodyString = JSON.stringify(req.body);
-//     // const convertedBody = qs.parse(JSON.parse(bodyString));
-//  const convertedBody = req.body;
-//     // console.log("✅ Body (Update):", convertedBody);
-//     console.log("✅ Converted Body (Update):", convertedBody);
-
-//     const updateData = {
-//       studentId: convertedBody.studentId,
-//       fullName: convertedBody.fullName,
-//       dateOfBirth: convertedBody.dateOfBirth,
-//       gender: convertedBody.gender,
-//       phone: convertedBody.phone,
-//       email: convertedBody.email,
-//       cnicBForm: convertedBody.cnicBForm,
-//       address: convertedBody.address,
-//       csr: convertedBody.csr,
-//       parentGuardian: {
-//         name: convertedBody.parentGuardian?.name,
-//         phone: convertedBody.parentGuardian?.phone,
-//       },
-//       courses: {
-//         selectedCourse: convertedBody.courses?.selectedCourse,
-//         batch: convertedBody.courses?.batch,
-//         totalFees: convertedBody.courses?.totalFees,
-//         downPayment: convertedBody.courses?.downPayment,
-//         numberOfInstallments: convertedBody.courses?.numberOfInstallments,
-//         feePerInstallment: convertedBody.courses?.feePerInstallment,
-//         amountPaid: convertedBody.courses?.amountPaid,
-//       },
-//       emergencyContact: {
-//         name: convertedBody.emergencyContact?.name,
-//         relationship: convertedBody.emergencyContact?.relationship,
-//         phoneNumber: convertedBody.emergencyContact?.phoneNumber,
-//       },
-//     };
-
-//     // ✅ If password is provided, rehash it
-//     if (convertedBody.password) {
-//       updateData.password = await bcrypt.hash(convertedBody.password, 10);
-//     }
-
-//     // ✅ Handle file updates
-//     if (req.files) {
-//       if (req.files.photo)
-//         updateData.photo = req.files.photo[0].path.replace(/\\/g, "/");
-//       if (req.files.studentCnicBForm)
-//         updateData.studentCnicBForm =
-//           req.files.studentCnicBForm[0].path.replace(/\\/g, "/");
-//       if (req.files.parentCnic)
-//         updateData.parentCnic = req.files.parentCnic[0].path.replace(/\\/g, "/");
-//       if (req.files.medicalRecords)
-//         updateData.medicalRecords =
-//           req.files.medicalRecords[0].path.replace(/\\/g, "/");
-//       if (req.files.additionalDocuments)
-//         updateData.additionalDocuments =
-//           req.files.additionalDocuments[0].path.replace(/\\/g, "/");
-//     }
-
-//     // const updatedStudent = await Student.findByIdAndUpdate(
-//     //   req.params.id,
-//     //   updateData,
-//     //   { new: true }
-//     // );  //////////////////////////
-       
-// const updatedStudent = await Student.findByIdAndUpdate(
-//   req.params.id,
-//   { $set: updateData },
-//   { new: true }
-// );
-
-// // const { id } = req.params;
-// // const updatedStudent = await Student.findByIdAndUpdate(id, req.body, { new: true });
-
-
-//     if (!updatedStudent)
-//       return res
-//         .status(404)
-//         .json({ success: false, message: "Student not found" });
-
-//     res.json({
-//       success: true,
-//       message: "Student updated successfully",
-//       student: updatedStudent,
-//     });
-//   } catch (error) {
-//     console.error("❌ Error updating student:", error);
-//     res.status(500).json({ success: false, message: error.message });
-//   }
-// };
-
-
-
-
-// controllers/studentController.js 
-
 
 const updateStudent = async (req, res) => {
   try {
@@ -231,9 +129,7 @@ const updateStudent = async (req, res) => {
     if (Object.keys(courses).length > 0) {
       updateData.courses = {
         ...(courses.selectedCourse !== undefined && { selectedCourse: courses.selectedCourse }),
-        ...(courses.batch !== undefined && { batch: courses.batch }),
         ...(courses.totalFees !== undefined && { totalFees: courses.totalFees }),
-        ...(courses.downPayment !== undefined && { downPayment: courses.downPayment }),
         ...(courses.numberOfInstallments !== undefined && { numberOfInstallments: courses.numberOfInstallments }),
         ...(courses.feePerInstallment !== undefined && { feePerInstallment: courses.feePerInstallment }),
         ...(courses.amountPaid !== undefined && { amountPaid: courses.amountPaid }),
@@ -296,7 +192,6 @@ const updateStudent = async (req, res) => {
       if (req.files.additionalDocuments) updateData.additionalDocuments = req.files.additionalDocuments[0].path.replace(/\\/g, "/");
     }
 
-    console.log("✅ Mapped updateData (before DB):", updateData);
 
     const updatedStudent = await Student.findByIdAndUpdate(
       id,
@@ -308,10 +203,9 @@ const updateStudent = async (req, res) => {
       return res.status(404).json({ success: false, message: "Student not found" });
     }
 
-    console.log("✅ Updated student returned by Mongoose:", updatedStudent);
     return res.json({ success: true, message: "Student updated successfully", student: updatedStudent });
   } catch (error) {
-    console.error("❌ Error updating student:", error);
+    console.error("Error updating student:", error);
     return res.status(500).json({ success: false, message: error.message });
   }
 };

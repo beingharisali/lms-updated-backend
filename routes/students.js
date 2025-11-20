@@ -7,6 +7,7 @@ const {
   getStudentById,
   updateStudent,
   deleteStudent,
+
 } = require("../controllers/students.js");
 
 // ✅ CRUD routes
@@ -15,5 +16,7 @@ router.get("/", getStudents);
 router.get("/:id", getStudentById);
 router.put("/:id", upload, updateStudent);
 router.delete("/:id", deleteStudent);
+
+
 
 module.exports = router;

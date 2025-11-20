@@ -1,32 +1,32 @@
 const mongoose = require("mongoose");
 
+// Parent / Guardian Info
 const ParentGuardianSchema = new mongoose.Schema({
   name: { type: String, required: true },
   phone: { type: String, required: true },
 });
 
-const CourseSchema = new mongoose.Schema({
-  selectedCourse: { type: String, required: true },
-  totalFees: { type: Number, required: true },
-  numberOfInstallments: { type: Number, default: 1 },
-  feePerInstallment: { type: Number, default: 0 },
-  amountPaid: { type: Number, default: 0 },
-  enrolledDate: { type: Date, default: Date.now },
-  //  SubmitFee: {
-  //     type: String,
-  //     enum: ["Jazz Cash", "Cash"],
-  //     // required: true,
-  //  },
-  SubmitFee: { type: String, required: true },
-   customPaymentMethod: { type: String },
-});
-
+// Emergency Contact Info
 const EmergencyContactSchema = new mongoose.Schema({
   name: { type: String, required: true },
   relationship: { type: String, required: true },
   phoneNumber: { type: String, required: true },
 });
 
+// Single Course Schema
+const CourseSchema = new mongoose.Schema({
+  selectedCourse: { type: String, required: true }, // or ObjectId if referencing Course collection
+  totalFees: { type: Number, required: true },
+  numberOfInstallments: { type: Number, default: 1 },
+  feePerInstallment: { type: Number, default: 0 },
+  amountPaid: { type: Number, default: 0 },
+  enrolledDate: { type: Date, default: Date.now },
+  SubmitFee: { type: String, required: true }, // e.g., "Jazz Cash", "Cash"
+  customPaymentMethod: { type: String },
+  attendance: { type: Map, of: String, default: {} }, // date => "Present"/"Absent"
+});
+
+// Main Student Schema
 const StudentSchema = new mongoose.Schema(
   {
     studentId: { type: String, required: true, unique: true },
@@ -39,17 +39,15 @@ const StudentSchema = new mongoose.Schema(
     cnicBForm: { type: String, required: true },
     address: { type: String, required: true },
 
-    // ✅ New CSR field (reference or text)
-    csr: {
-      type: String, // you can make this ObjectId if linking to User model
-      required: false,
-    },
+    // Optional CSR (could be ObjectId if linking to another user)
+    csr: { type: String },
 
+    // Nested Objects
     parentGuardian: ParentGuardianSchema,
-    courses: CourseSchema,
+    courses: { type: [CourseSchema], default: [] }, // ✅ Array for multiple courses
     emergencyContact: EmergencyContactSchema,
 
-    // Files
+    // Files / Documents
     photo: { type: String },
     studentCnicBForm: { type: String },
     parentCnic: { type: String },
@@ -60,6 +58,69 @@ const StudentSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model("Student", StudentSchema);
+
+// const mongoose = require("mongoose");
+
+// const ParentGuardianSchema = new mongoose.Schema({
+//   name: { type: String, required: true },
+//   phone: { type: String, required: true },
+// });
+
+// const CourseSchema = new mongoose.Schema({
+//   selectedCourse: { type: String, required: true },
+//   totalFees: { type: Number, required: true },
+//   numberOfInstallments: { type: Number, default: 1 },
+//   feePerInstallment: { type: Number, default: 0 },
+//   amountPaid: { type: Number, default: 0 },
+//   enrolledDate: { type: Date, default: Date.now },
+//   //  SubmitFee: {
+//   //     type: String,
+//   //     enum: ["Jazz Cash", "Cash"],
+//   //     // required: true,
+//   //  },
+//   SubmitFee: { type: String, required: true },
+//    customPaymentMethod: { type: String },
+// });
+
+// const EmergencyContactSchema = new mongoose.Schema({
+//   name: { type: String, required: true },
+//   relationship: { type: String, required: true },
+//   phoneNumber: { type: String, required: true },
+// });
+
+// const StudentSchema = new mongoose.Schema(
+//   {
+//     studentId: { type: String, required: true, unique: true },
+//     fullName: { type: String, required: true },
+//     dateOfBirth: { type: String, required: true },
+//     gender: { type: String, required: true },
+//     phone: { type: String, required: true },
+//     email: { type: String, required: true, unique: true },
+//     password: { type: String, required: true },
+//     cnicBForm: { type: String, required: true },
+//     address: { type: String, required: true },
+
+//     // ✅ New CSR field (reference or text)
+//     csr: {
+//       type: String, // you can make this ObjectId if linking to User model
+//       required: false,
+//     },
+
+//     parentGuardian: ParentGuardianSchema,
+//     courses: CourseSchema,
+//     emergencyContact: EmergencyContactSchema,
+
+//     // Files
+//     photo: { type: String },
+//     studentCnicBForm: { type: String },
+//     parentCnic: { type: String },
+//     medicalRecords: { type: String },
+//     additionalDocuments: { type: String },
+//   },
+//   { timestamps: true }
+// );
+
+// module.exports = mongoose.model("Student", StudentSchema);
 
 
 

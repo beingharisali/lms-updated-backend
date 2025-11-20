@@ -11,6 +11,7 @@ const {
   getCourseStats,
   getMyCoursesAsTeacher,
   uploadCourseImage,
+  getStudentsByCourse,
 } = require("../controllers/courses");
 
 router.use(authenticateUser);

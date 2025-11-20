@@ -51,9 +51,11 @@ const teachersRouter = require("./routes/teachers");
 const staffRouter = require("./routes/staff");
 const visitorsRouter = require("./routes/visitors");
 const assignmentRoutes = require("./routes/assignmentRoutes");
-const quizRoutes = require("./routes/quizRoutes"); // ✅ add quiz routes
+const quizRoutes = require("./routes/quizRoutes"); 
 const coursesRouter = require("./routes/courses");
 const attendanceRoutes = require("./routes/attendance");
+const studentByCourseRoutes = require("./routes/studentByCourseroute");
+
 
 
 
@@ -108,7 +110,8 @@ app.use("/api/v1/visitors", visitorsRouter);
 app.use("/api/v1/assignments", assignmentRoutes);
 app.use("/api/v1/quizzes", quizRoutes); // ✅ mount quizzes API
 app.use("/api/v1/courses", coursesRouter);
-app.use("/api/v1/courses", attendanceRoutes);
+app.use("/api/v1/attendance", attendanceRoutes);
+app.use("/api/students", studentByCourseRoutes);
 
 // middleware
 app.use(notFoundMiddleware);
